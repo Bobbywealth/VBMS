@@ -586,8 +586,13 @@
           localStorage.setItem('vbmsLoginTime', new Date().toISOString());
           localStorage.setItem('token', data.token);
           
-          // Handle the response as if from API
-          handleLoginSuccess(data);
+          // Direct redirect for main admin - skip handleLoginSuccess to avoid any conflicts
+          console.log("🚀 DIRECT REDIRECT: Going to Main Admin Dashboard");
+          document.getElementById("loginCard").classList.add('success');
+          
+          setTimeout(() => {
+            window.location.replace("main-admin-redirect.html");
+          }, 600);
           return;
         }
 
