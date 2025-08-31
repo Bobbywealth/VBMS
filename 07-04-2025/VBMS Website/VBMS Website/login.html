@@ -606,7 +606,8 @@
             setTimeout(() => {
               if (role === "main_admin") {
                 console.log("🚀 Redirecting to Main Admin Dashboard");
-                window.location.href = "admin-main-dashboard.html";
+                // Force redirect with a clean slate
+                window.location.replace("admin-main-dashboard.html");
               } else if (role === "admin") {
                 window.location.href = "dashboard.html";
               } else if (role === "editor" || role === "staff") {

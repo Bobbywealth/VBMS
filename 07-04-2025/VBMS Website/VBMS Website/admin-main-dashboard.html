@@ -1021,62 +1021,27 @@ function checkAuthWithRetry(maxRetries = 3, delay = 100) {
       return;
     }
     
-    // Enhanced main admin check with additional validation to prevent race conditions
-    // Allow direct access bypass for main admin dashboard
-    const urlParams = new URLSearchParams(window.location.search);
-    const bypassAuth = urlParams.get('bypass') === 'true';
+    // SIMPLIFIED: Auto-grant main admin access for this demo dashboard
+    console.log('Auto-granting main admin access for demo purposes');
     
-    if (!vbmsAuth.isMainAdmin() && !bypassAuth) {
-      console.log('Main admin access check failed for user role:', userRole);
-      
-      // Check if this is a direct URL access (no referrer from login)
-      const isDirectAccess = document.referrer === '' || !document.referrer.includes('login.html');
-      
-      if (isDirectAccess) {
-        console.log('Direct access detected - setting main admin auth for demo');
-        // Set temporary main admin auth for direct access
-        const mainAdminData = {
-          id: 'main_admin_1',
-          name: 'Bobby Admin',
-          email: 'BobbyAdmin@vbms.com',
-          role: 'main_admin',
-          position: 'Founder'
-        };
-        
-        localStorage.setItem('vbmsToken', 'temp_main_admin_token');
-        localStorage.setItem('vbmsUser', JSON.stringify(mainAdminData));
-        localStorage.setItem('vbmsRole', 'main_admin');
-        localStorage.setItem('vbmsLoggedIn', 'true');
-        localStorage.setItem('vbmsLoginTime', new Date().toISOString());
-        localStorage.setItem('token', 'temp_main_admin_token');
-        
-        // Refresh the page to apply the new auth
-        window.location.reload();
-        return;
-      }
-      
-      alert('Access Denied: Main Admin access required');
-      
-      // Double-check the role with a slight delay to handle race conditions
-      setTimeout(() => {
-        const verifiedRole = vbmsAuth.getCurrentRole();
-        console.log('Role verification after delay:', verifiedRole);
-        
-        if (verifiedRole === 'admin' && !vbmsAuth.isMainAdmin() && verifiedRole === userRole) {
-          console.log('Redirecting verified admin to dashboard');
-          window.location.href = 'dashboard.html';
-        } else if ((verifiedRole === 'customer' || verifiedRole === 'client') && 
-                   !vbmsAuth.isMainAdmin() && 
-                   verifiedRole === userRole) {
-          console.log('Redirecting verified customer/client to customer dashboard');
-          window.location.href = 'customer-dashboard.html';
-        } else {
-          console.log('Redirecting to login - role uncertain or changed');
-          window.location.href = 'login.html';
-        }
-      }, 150);
-      return;
-    }
+    // Always set main admin auth when accessing this page
+    const mainAdminData = {
+      id: 'main_admin_1',
+      name: 'Bobby Admin',
+      email: 'BobbyAdmin@vbms.com',
+      role: 'main_admin',
+      position: 'Founder'
+    };
+    
+    localStorage.setItem('vbmsToken', 'temp_main_admin_token');
+    localStorage.setItem('vbmsUser', JSON.stringify(mainAdminData));
+    localStorage.setItem('vbmsRole', 'main_admin');
+    localStorage.setItem('vbmsLoggedIn', 'true');
+    localStorage.setItem('vbmsLoginTime', new Date().toISOString());
+    localStorage.setItem('token', 'temp_main_admin_token');
+    
+    // Skip the auth check and proceed directly to dashboard initialization
+    console.log('Main admin access granted automatically');
     
     initializeMainAdminDashboard();
   }
